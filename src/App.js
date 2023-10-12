@@ -15,7 +15,8 @@ function App() {
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       /* Convert array of arrays */
-      const xlData = XLSX.utils.sheet_to_json(ws);
+      const xlData = XLSX.utils.sheet_to_json(ws, { header: 1, range: 7 });
+
       console.log(xlData);
       /* Update state */
       setData(xlData);
@@ -27,8 +28,6 @@ function App() {
     <div>
       <input type="file" onChange={handleFile} />
       <pre>{JSON.stringify(data)}</pre>
-     
-      
     </div>
   );
 }
