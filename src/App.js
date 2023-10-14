@@ -16,13 +16,26 @@ function App() {
       const ws = wb.Sheets[wsname];
       /* Convert array of arrays */
       const xlData = XLSX.utils.sheet_to_json(ws, { header: 1, range: 7 });
-
-      console.log(xlData);
       /* Update state */
       setData(xlData);
+      /* Filter rows that contain 'VN-A521' */
+      const filteredData = xlData.filter(row => row.includes('VN-A522'));
+      console.log(filteredData);
+      const convertToTimeFormat = (time) => {
+        const date = new Date(time);
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+      };
+
+      const time8 = convertToTimeFormat(filteredData[8]);
+      const time9 = convertToTimeFormat(filteredData[9]);
+
+      console.log(time8, time9);
     };
     reader.readAsBinaryString(files[0]);
   };
+
 
   return (
     <div>
