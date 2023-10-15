@@ -15,23 +15,30 @@ function App() {
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       /* Convert array of arrays */
-      const xlData = XLSX.utils.sheet_to_json(ws, { header: 1, range: 7 });
+      const xlData = XLSX.utils.sheet_to_json(ws, { header: 'A', range: 7 });
       /* Update state */
-      setData(xlData);
+
       /* Filter rows that contain 'VN-A521' */
-      const filteredData = xlData.filter(row => row.includes('VN-A522'));
-      console.log(filteredData);
-      const convertToTimeFormat = (time) => {
-        const date = new Date(time);
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        return `${hours}:${minutes}`;
+      // const filteredData = xlData.filter(row => row.includes('VN-A522'));
+      // console.log(filteredData);
+
+      setData(xlData);
+      console.log(xlData)
+      console.log('Colum I:', xlData[1].I, typeof xlData[1].I)
+
+      const getTimeDifference = (startTime, endTime) => {
+        const start = new Date(`1970-01-01T${startTime}Z`);
+        const end = new Date(`1970-01-01T${endTime}Z`);
+        let diff = end - start;
+        let diffHours = Math.floor(diff / 3.6e6); // hours
+        let diffMinutes = Math.floor((diff % 3.6e6) / 6e4); // minutes
+        return `${diffHours}:${diffMinutes}`;
       };
 
-      const time8 = convertToTimeFormat(filteredData[8]);
-      const time9 = convertToTimeFormat(filteredData[9]);
-
-      console.log(time8, time9);
+      xlData.forEach((item, index) => {
+        console.log(`Time difference between J and I for row ${index + 1}: ${getTimeDifference(item.I, item.J)}`);
+      });
+      // console.log('value:', (xlData[1].J - xlData[1].I))
     };
     reader.readAsBinaryString(files[0]);
   };
